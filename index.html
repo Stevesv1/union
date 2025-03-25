@@ -28,24 +28,14 @@
 
         body {
             font-family: 'Lexend', sans-serif;
-            background: linear-gradient(135deg, #e6f2ff 0%, #f0f9ff 100%);
+            background: linear-gradient(135deg, #e6f2ff 0%, #d9e2ec 100%);
             color: var(--text-primary);
             line-height: 1.6;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 1rem;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 650px;
-            background-color: var(--card-background);
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            padding: 2.5rem;
-            position: relative;
+            padding: 2rem;
         }
 
         .header {
@@ -57,7 +47,7 @@
         }
 
         .header-icon {
-            font-size: 3rem;
+            font-size: 3.5rem;
             color: var(--primary-color);
             margin-bottom: 0.75rem;
             animation: pulse 2s infinite;
@@ -72,18 +62,19 @@
         .header h1 {
             color: var(--primary-color);
             font-weight: 700;
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
         }
 
-        .header-subtitle {
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
         .input-group {
+            width: 100%;
+            max-width: 650px;
             margin-bottom: 1.5rem;
             position: relative;
+            background-color: #f8fafc;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
         .input-group label {
@@ -114,7 +105,7 @@
         .input-wrapper input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 10px var(--primary-color);
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
             background-color: #f0f4ff;
         }
 
@@ -137,7 +128,6 @@
         }
 
         .wallet-address span {
-            color: var(--text-secondary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -159,6 +149,7 @@
 
         .btn {
             width: 100%;
+            max-width: 650px;
             padding: 1rem;
             background-color: var(--primary-color);
             color: white;
@@ -166,15 +157,16 @@
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.1s ease, box-shadow 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-top: 1rem;
         }
 
         .btn:hover {
-            box-shadow: 0 0 15px var(--primary-color);
-            transform: scale(1.02);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
         }
 
         .btn:active {
@@ -182,7 +174,8 @@
         }
 
         .console-container {
-            position: relative;
+            width: 100%;
+            max-width: 650px;
             margin-top: 1rem;
         }
 
@@ -259,6 +252,8 @@
         }
 
         .advanced-toggle {
+            width: 100%;
+            max-width: 650px;
             display: flex;
             align-items: center;
             margin-bottom: 1rem;
@@ -315,10 +310,32 @@
             transform: translateX(20px);
         }
 
+        .input-row {
+            display: flex;
+            gap: 1rem;
+            max-width: 650px;
+            width: 100%;
+        }
+
+        .input-row .input-group {
+            flex: 1;
+        }
+
         @media (max-width: 680px) {
-            .container {
-                margin: 1rem;
-                padding: 1.5rem;
+            body {
+                padding: 1rem;
+            }
+
+            .input-group,
+            .btn,
+            .console-container,
+            .advanced-toggle,
+            .input-row {
+                max-width: 100%;
+            }
+
+            .input-row {
+                flex-direction: column;
             }
 
             .wallet-address {
@@ -333,75 +350,80 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <i class="fas fa-exchange-alt header-icon"></i>
-            <h1>USDC Bridge</h1>
-        </div>
+    <div class="header">
+        <i class="fas fa-exchange-alt header-icon"></i>
+        <h1>USDC Bridge</h1>
+    </div>
 
-        <div class="input-group">
-            <label><i class="fas fa-key"></i> Private Key</label>
+    <div class="input-group">
+        <label><i class="fas fa-network-wired"></i> RPC Configuration</label>
+        <div class="advanced-toggle">
+            <i class="fas fa-cog"></i>
+            <label class="toggle-switch">
+                <input type="checkbox" id="customRPCToggle">
+                <span class="slider"></span>
+            </label>
+            Use Custom RPC
+        </div>
+        <div id="customRPCSection" style="display:none;">
             <div class="input-wrapper">
-                <input type="password" id="privateKey" placeholder="Enter your private key securely">
-            </div>
-            <div id="walletAddress" class="wallet-address" style="display: none;">
-                <span id="walletAddressText"></span>
-                <button class="clear-wallet-btn" id="clearWalletButton">
-                    <i class="fas fa-trash"></i>
-                </button>
+                <input type="text" id="customRPCInput" placeholder="Enter custom RPC URL (e.g., https://eth-sepolia.example.com)">
             </div>
         </div>
+    </div>
 
-        <div class="input-group">
-            <label><i class="fas fa-wallet"></i> Babylon Receiving Address</label>
-            <div class="input-wrapper">
-                <input type="text" id="babylonAddress" placeholder="bbn1gcytw83ag3vdqgnt6vskfvgtqet6u54wa5m3wm">
-            </div>
+    <div class="input-group">
+        <label><i class="fas fa-key"></i> Private Key</label>
+        <div class="input-wrapper">
+            <input type="password" id="privateKey" placeholder="Enter your private key securely">
         </div>
+        <div id="walletAddress" class="wallet-address" style="display: none;">
+            <span id="walletAddressText"></span>
+            <button class="clear-wallet-btn" id="clearWalletButton">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
 
+    <div class="input-group">
+        <label><i class="fas fa-wallet"></i> Babylon Receiving Address</label>
+        <div class="input-wrapper">
+            <input type="text" id="babylonAddress" placeholder="bbn1gcytw83ag3vdqgnt6vskfvgtqet6u54wa5m3wm">
+        </div>
+    </div>
+
+    <div class="input-row">
         <div class="input-group">
             <label><i class="fas fa-coins"></i> USDC Amount</label>
             <div class="input-wrapper">
                 <input type="number" id="usdcAmount" placeholder="Enter USDC amount" step="0.001" min="0.001">
             </div>
         </div>
-
         <div class="input-group">
             <label><i class="fas fa-exchange-alt"></i> Transactions</label>
             <div class="input-wrapper">
                 <input type="number" id="transactionCount" min="1" value="1">
             </div>
         </div>
+    </div>
 
-        <div class="advanced-toggle">
-            <i class="fas fa-gas-pump"></i>
-            <label class="toggle-switch">
-                <input type="checkbox" id="advancedToggle">
-                <span class="slider"></span>
-            </label>
-            Advanced Gas Options
+    <div class="input-group">
+        <label><i class="fas fa-gas-pump"></i> Gas Boost (GWEI)</label>
+        <div class="input-wrapper">
+            <input type="number" id="gasBoost" placeholder="Boost to add to base fee (e.g., 2)" step="0.1" min="0">
         </div>
+    </div>
 
-        <div id="advancedSection" style="display:none;">
-            <div class="input-group">
-                <label><i class="fas fa-gas-pump"></i> Gas Boost (GWEI)</label>
-                <div class="input-wrapper">
-                    <input type="number" id="gasBoost" placeholder="Boost to add to base fee (e.g., 2)" step="0.1" min="0">
-                </div>
-            </div>
+    <button class="btn" id="executeButton">Bridge USDC</button>
+
+    <div class="console-container">
+        <div class="console-header">
+            <span>Console Output</span>
+            <button class="clear-logs-btn" id="clearLogsButton">
+                Clear <i class="fas fa-trash"></i>
+            </button>
         </div>
-
-        <button class="btn" id="executeButton">Bridge USDC</button>
-
-        <div class="console-container">
-            <div class="console-header">
-                <span>Console Output</span>
-                <button class="clear-logs-btn" id="clearLogsButton">
-                    Clear <i class="fas fa-trash"></i>
-                </button>
-            </div>
-            <div class="console" id="consoleOutput"></div>
-        </div>
+        <div class="console" id="consoleOutput"></div>
     </div>
 
     <script>
@@ -409,6 +431,8 @@
         const baseToken = "0x1c7d4b196cb0c7b01d743fbc6116a902379c7238";
         const channelId = 10;
 
+        const customRPCToggle = document.getElementById('customRPCToggle');
+        const customRPCSection = document.getElementById('customRPCSection');
         const privateKeyInput = document.getElementById('privateKey');
         const walletAddressDisplay = document.getElementById('walletAddress');
         const walletAddressText = document.getElementById('walletAddressText');
@@ -416,12 +440,126 @@
         const babylonAddressInput = document.getElementById('babylonAddress');
         const usdcAmountInput = document.getElementById('usdcAmount');
         const transactionCountInput = document.getElementById('transactionCount');
-        const advancedToggle = document.getElementById('advancedToggle');
-        const advancedSection = document.getElementById('advancedSection');
         const executeButton = document.getElementById('executeButton');
         const gasBoostInput = document.getElementById('gasBoost');
         const consoleOutput = document.getElementById('consoleOutput');
         const clearLogsButton = document.getElementById('clearLogsButton');
+
+        customRPCToggle.addEventListener('change', function() {
+            customRPCSection.style.display = this.checked ? 'block' : 'none';
+        });
+
+        privateKeyInput.addEventListener('input', function() {
+            try {
+                const wallet = new ethers.Wallet(this.value);
+                walletAddressText.textContent = `Wallet: ${wallet.address}`;
+                walletAddressDisplay.style.display = 'flex';
+            } catch (error) {
+                walletAddressText.textContent = 'Invalid Private Key';
+                walletAddressDisplay.style.display = 'flex';
+            }
+        });
+
+        clearWalletButton.addEventListener('click', function() {
+            privateKeyInput.value = '';
+            walletAddressDisplay.style.display = 'none';
+        });
+
+        clearLogsButton.addEventListener('click', function() {
+            while (consoleOutput.firstChild) {
+                consoleOutput.removeChild(consoleOutput.firstChild);
+            }
+        });
+
+        async function prepareBridge() {
+            executeButton.disabled = true;
+            executeButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            try {
+                const privateKey = privateKeyInput.value;
+                const babylonAddress = babylonAddressInput.value;
+                const usdcAmount = usdcAmountInput.value;
+                const transactionCount = parseInt(transactionCountInput.value);
+                let provider;
+                if (customRPCToggle.checked) {
+                    const customRPC = document.getElementById('customRPCInput').value;
+                    if (!customRPC) {
+                        throw new Error('Custom RPC URL is required when using custom RPC');
+                    }
+                    provider = new ethers.providers.JsonRpcProvider(customRPC);
+                } else {
+                    provider = new ethers.providers.JsonRpcProvider('https://eth-sepolia.public.blastapi.io');
+                }
+
+                const wallet = new ethers.Wallet(privateKey, provider);
+                createLogEntry('Initializing bridge transaction...', 'info');
+                const abi = [
+                    "function transferAndCall(uint32 channelId, bytes memory receiver, address baseToken, uint256 baseAmount, bytes memory quoteToken, uint256 quoteAmount, bytes memory contractAddress, bytes memory contractCalldata, uint64 timeoutHeight, uint64 timeoutTimestamp, bytes32 salt) external"
+                ];
+                const contract = new ethers.Contract(contractAddress, abi, wallet);
+
+                const erc20Abi = [
+                    "function approve(address spender, uint256 amount) external returns (bool)",
+                    "function allowance(address owner, address spender) external view returns (uint256)"
+                ];
+                const tokenContract = new ethers.Contract(baseToken, erc20Abi, wallet);
+                const baseAmount = ethers.utils.parseUnits(usdcAmount, 6);
+                const totalAmount = baseAmount.mul(transactionCount);
+
+                const currentBaseFee = await provider.getGasPrice();
+                const gasBoostValue = gasBoostInput.value ? 
+                    ethers.utils.parseUnits(gasBoostInput.value.toString(), 'gwei') : 
+                    ethers.utils.parseUnits('0', 'gwei');
+                const gasPrice = currentBaseFee.add(gasBoostValue);
+                createLogEntry(`Using gas price: ${ethers.utils.formatUnits(gasPrice, 'gwei')} GWEI (Base: ${ethers.utils.formatUnits(currentBaseFee, 'gwei')} + Boost: ${ethers.utils.formatUnits(gasBoostValue, 'gwei')})`, 'info');
+                const allowance = await tokenContract.allowance(wallet.address, contractAddress);
+                createLogEntry(`Current allowance: ${ethers.utils.formatUnits(allowance, 6)} USDC`, 'info');
+                if (allowance.lt(totalAmount)) {
+                    createLogEntry('Approving maximum amount for USDC...', 'info');
+                    const approveTx = await tokenContract.approve(contractAddress, ethers.constants.MaxUint256, { gasPrice });
+                    createLogEntry('Approval Tx Hash: ', 'info', approveTx.hash);
+                    await approveTx.wait();
+                    createLogEntry('Token approved successfully', 'success');
+                } else {
+                    createLogEntry('Sufficient allowance already exists', 'info');
+                }
+                for (let i = 0; i < transactionCount; i++) {
+                    const receiver = ethers.utils.toUtf8Bytes(babylonAddress);
+                    const quoteToken = ethers.utils.toUtf8Bytes("bbn168fft4g777vnf9880plpehj2fzwjkeedc0c2s389eqa3cngh4s6scetjaz");
+                    const contractAddressParam = ethers.utils.toUtf8Bytes("bbn1248rv43kw0s60vkysgs2uumrr8u7wmcaxf6fuswt3p806u32xrwqnq62t8");
+                    const timeoutHeight = ethers.BigNumber.from("0xffffffffffffffff");
+                    const timeoutTimestamp = 0;
+                    const salt = ethers.utils.randomBytes(32);
+
+                    createLogEntry(`Executing bridge transfer ${i + 1} of ${transactionCount}...`, 'info');
+                    const tx = await contract.transferAndCall(
+                        channelId,
+                        receiver,
+                        baseToken,
+                        baseAmount,
+                        quoteToken,
+                        baseAmount,
+                        contractAddressParam,
+                        "0x",
+                        timeoutHeight,
+                        timeoutTimestamp,
+                        salt,
+                        { gasPrice }
+                    );
+                    createLogEntry('Tx Hash: ', 'success', tx.hash);
+                    await tx.wait();
+                    createLogEntry(`Transaction ${i + 1} confirmed`, 'success');
+                }
+
+                createLogEntry('All bridge transfers completed successfully', 'success');
+            } catch (error) {
+                createLogEntry(`Error: ${error.message}`, 'error');
+            } finally {
+                executeButton.disabled = false;
+                executeButton.innerHTML = 'Bridge USDC';
+            }
+        }
+
+        executeButton.addEventListener('click', prepareBridge);
 
         function createLogEntry(message, type = 'info', txHash = null) {
             const logEntry = document.createElement('div');
@@ -457,123 +595,6 @@
         function shortenHash(hash) {
             return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
         }
-
-        privateKeyInput.addEventListener('input', function() {
-            try {
-                const wallet = new ethers.Wallet(this.value);
-                walletAddressText.textContent = `Wallet : ${wallet.address}`;
-                walletAddressDisplay.style.display = 'flex';
-            } catch (error) {
-                walletAddressText.textContent = 'Invalid Private Key';
-                walletAddressDisplay.style.display = 'flex';
-            }
-        });
-
-        clearWalletButton.addEventListener('click', function() {
-            privateKeyInput.value = '';
-            walletAddressDisplay.style.display = 'none';
-        });
-
-        clearLogsButton.addEventListener('click', function() {
-            while (consoleOutput.firstChild) {
-                consoleOutput.removeChild(consoleOutput.firstChild);
-            }
-        });
-
-        advancedToggle.addEventListener('change', function() {
-            advancedSection.style.display = this.checked ? 'block' : 'none';
-        });
-
-        async function prepareBridge() {
-            executeButton.disabled = true;
-            executeButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            try {
-                const privateKey = privateKeyInput.value;
-                const babylonAddress = babylonAddressInput.value;
-                const baseAmount = ethers.utils.parseUnits(usdcAmountInput.value, 6);
-                const transactionCount = parseInt(transactionCountInput.value);
-
-                const provider = new ethers.providers.JsonRpcProvider('https://sepolia.drpc.org');
-                const wallet = new ethers.Wallet(privateKey, provider);
-
-                createLogEntry('Initializing bridge transaction...', 'info');
-
-                const abi = [
-                    "function transferAndCall(uint32 channelId, bytes memory receiver, address baseToken, uint256 baseAmount, bytes memory quoteToken, uint256 quoteAmount, bytes memory contractAddress, bytes memory contractCalldata, uint64 timeoutHeight, uint64 timeoutTimestamp, bytes32 salt) external"
-                ];
-                const contract = new ethers.Contract(contractAddress, abi, wallet);
-
-                const erc20Abi = [
-                    "function approve(address spender, uint256 amount) external returns (bool)",
-                    "function allowance(address owner, address spender) external view returns (uint256)"
-                ];
-                const tokenContract = new ethers.Contract(baseToken, erc20Abi, wallet);
-
-                const currentNonce = await wallet.getTransactionCount();
-
-                for (let i = 0; i < transactionCount; i++) {
-                    const nonce = currentNonce + i;
-                    const receiver = ethers.utils.toUtf8Bytes(babylonAddress);
-                    const quoteToken = ethers.utils.toUtf8Bytes("bbn168fft4g777vnf9880plpehj2fzwjkeedc0c2s389eqa3cngh4s6scetjaz");
-                    const contractAddressParam = ethers.utils.toUtf8Bytes("bbn1248rv43kw0s60vkysgs2uumrr8u7wmcaxf6fuswt3p806u32xrwqnq62t8");
-
-                    createLogEntry(`Preparing Transaction ${i + 1}...`, 'info');
-
-                    const currentBaseFee = await provider.getGasPrice();
-                    const gasBoostValue = gasBoostInput.value ? 
-                        ethers.utils.parseUnits(gasBoostInput.value.toString(), 'gwei') : 
-                        ethers.utils.parseUnits('0', 'gwei');
-                    
-                    const gasPrice = currentBaseFee.add(gasBoostValue);
-                    createLogEntry(`Using gas price: ${ethers.utils.formatUnits(gasPrice, 'gwei')} GWEI (Base: ${ethers.utils.formatUnits(currentBaseFee, 'gwei')} + Boost: ${ethers.utils.formatUnits(gasBoostValue, 'gwei')})`, 'info');
-
-                    const allowance = await tokenContract.allowance(wallet.address, contractAddress);
-                    createLogEntry(`Current allowance: ${ethers.utils.formatUnits(allowance, 6)} USDC`, 'info');
-                    if (allowance.lt(baseAmount)) {
-                        createLogEntry(`Approving ${ethers.utils.formatUnits(baseAmount, 6)} USDC...`, 'info');
-                        const approveTx = await tokenContract.approve(contractAddress, baseAmount, { nonce, gasPrice });
-                        createLogEntry('Approval Tx Hash: ', 'info', approveTx.hash);
-                        await approveTx.wait();
-                        createLogEntry('Token approved successfully', 'success');
-                        const newAllowance = await tokenContract.allowance(wallet.address, contractAddress);
-                        createLogEntry(`New allowance: ${ethers.utils.formatUnits(newAllowance, 6)} USDC`, 'info');
-                    }
-
-                    const timeoutHeight = ethers.BigNumber.from("0xffffffffffffffff");
-                    const timeoutTimestamp = 0;
-                    const salt = ethers.utils.randomBytes(32);
-
-                    createLogEntry('Executing bridge transfer...', 'info');
-                    const tx = await contract.transferAndCall(
-                        channelId,
-                        receiver,
-                        baseToken,
-                        baseAmount,
-                        quoteToken,
-                        baseAmount,
-                        contractAddressParam,
-                        "0x",
-                        timeoutHeight,
-                        timeoutTimestamp,
-                        salt,
-                        { gasPrice, nonce }
-                    );
-
-                    createLogEntry('Tx Hash: ', 'success', tx.hash);
-                    await tx.wait();
-                    createLogEntry('Transaction confirmed', 'success');
-                }
-
-                createLogEntry('Bridge transfer completed successfully', 'success');
-            } catch (error) {
-                createLogEntry(`Error: ${error.message}`, 'error');
-            } finally {
-                executeButton.disabled = false;
-                executeButton.innerHTML = 'Bridge USDC';
-            }
-        }
-
-        executeButton.addEventListener('click', prepareBridge);
     </script>
 </body>
 </html>
