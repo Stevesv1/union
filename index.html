@@ -1,535 +1,579 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Union Bridge by Zun</title>
- <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
- <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
- <style>
- :root {
- --primary-color: #2563eb;
- --secondary-color: #10b981;
- --background-color: #f0f4f8;
- --card-background: #ffffff;
- --text-primary: #0f172a;
- --text-secondary: #334155;
- --border-color: #cbd5e1;
- --console-bg: #1e293b;
- --console-text: #4ade80;
- }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Union Bridge by Zun</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #10b981;
+            --background-color: #f0f4f8;
+            --card-background: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --border-color: #cbd5e1;
+            --console-bg: #1e293b;
+            --console-text: #4ade80;
+        }
 
- * {
- margin: 0;
- padding: 0;
- box-sizing: border-box;
- }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
- body {
- font-family: 'Plus Jakarta Sans', sans-serif;
- background: linear-gradient(135deg, #e6f2ff 0%, #f0f9ff 100%);
- color: var(--text-primary);
- line-height: 1.6;
- display: flex;
- justify-content: center;
- align-items: center;
- min-height: 100vh;
- padding: 1rem;
- }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: linear-gradient(135deg, #e6f2ff 0%, #f0f9ff 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
 
- .container {
- width: 100%;
- max-width: 650px;
- background-color: var(--card-background);
- border-radius: 20px;
- box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
- padding: 2.5rem;
- position: relative;
- }
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background-color: var(--card-background);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            position: relative;
+        }
 
- .header {
- text-align: center;
- margin-bottom: 2rem;
- display: flex;
- flex-direction: column;
- align-items: center;
- }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
- .header-icon {
- font-size: 3rem;
- color: var(--primary-color);
- margin-bottom: 0.75rem;
- }
+        .header-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            animation: pulse 2s infinite;
+        }
 
- .header h1 {
- color: var(--primary-color);
- font-weight: 700;
- font-size: 2rem;
- margin-bottom: 0.5rem;
- }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
 
- .header-subtitle {
- color: var(--text-secondary);
- font-weight: 500;
- }
+        .header h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
 
- .input-group {
- margin-bottom: 1.5rem;
- position: relative;
- }
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
 
- .input-group label {
- display: block;
- margin-bottom: 0.5rem;
- font-weight: 600;
- color: var(--text-secondary);
- }
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
 
- .input-wrapper {
- position: relative;
- }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
 
- .input-wrapper input {
- width: 100%;
- padding: 0.875rem 1rem;
- border: 1px solid var(--border-color);
- border-radius: 10px;
- transition: all 0.3s ease;
- font-family: 'Plus Jakarta Sans', sans-serif;
- }
+        .input-group label i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
 
- .input-wrapper input:focus {
- outline: none;
- border-color: var(--primary-color);
- box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
- }
+        .input-wrapper {
+            position: relative;
+        }
 
- .wallet-address {
- font-size: 0.875rem;
- color: var(--text-secondary);
- margin-top: 0.5rem;
- background-color: #f1f5f9;
- padding: 0.5rem 1rem;
- border-radius: 10px;
- display: flex;
- justify-content: space-between;
- align-items: center;
- overflow: hidden;
- }
+        .input-wrapper input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-family: 'Lexend', sans-serif;
+        }
 
- .wallet-address span {
- color: var(--text-secondary);
- white-space: nowrap;
- overflow: hidden;
- text-overflow: ellipsis;
- flex: 1;
- margin-right: 0.5rem;
- }
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
+            background-color: #f0f4ff;
+        }
 
- .clear-wallet-btn {
- background: none;
- border: none;
- color: #64748b;
- cursor: pointer;
- transition: color 0.3s ease;
- }
+        .input-wrapper input:hover {
+            border-color: var(--primary-color);
+        }
 
- .clear-wallet-btn:hover {
- color: #f87171;
- }
+        .wallet-address {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            background-color: #f1f5f9;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
 
- .btn {
- width: 100%;
- padding: 1rem;
- background-color: var(--primary-color);
- color: white;
- border: none;
- border-radius: 10px;
- font-weight: 600;
- cursor: pointer;
- transition: background-color 0.3s ease, transform 0.1s ease;
- display: flex;
- align-items: center;
- justify-content: center;
- }
+        .wallet-address span {
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+            margin-right: 0.5rem;
+        }
 
- .btn:hover {
- background-color: #1d4ed8;
- }
+        .clear-wallet-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
 
- .btn:active {
- transform: scale(0.98);
- }
+        .clear-wallet-btn:hover {
+            color: #f87171;
+        }
 
- .console-container {
- position: relative;
- margin-top: 1rem;
- }
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
- .console-header {
- display: flex;
- justify-content: space-between;
- align-items: center;
- margin-bottom: 0.5rem;
- }
+        .btn:hover {
+            box-shadow: 0 0 15px var(--primary-color);
+            transform: scale(1.02);
+        }
 
- .console-header span {
- color: var(--text-secondary);
- font-weight: 500;
- }
+        .btn:active {
+            transform: scale(0.98);
+        }
 
- .console {
- background-color: var(--console-bg);
- color: var(--console-text);
- font-family: 'Fira Code', monospace;
- padding: 1rem;
- border-radius: 10px;
- max-height: 300px;
- overflow-x: auto;
- overflow-y: auto;
- position: relative;
- scrollbar-width: thin;
- scrollbar-color: #2563eb #1e293b;
- }
+        .console-container {
+            position: relative;
+            margin-top: 1rem;
+        }
 
- .console::-webkit-scrollbar {
- width: 8px;
- height: 8px;
- background-color: #1e293b;
- }
+        .console-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
 
- .console::-webkit-scrollbar-thumb {
- background-color: #2563eb;
- border-radius: 4px;
- }
+        .console-header span {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
 
- .console-log {
- white-space: nowrap;
- }
+        .console {
+            background-color: var(--console-bg);
+            color: var(--console-text);
+            font-family: 'Fira Code', monospace;
+            padding: 1rem;
+            border-radius: 10px;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #2563eb #1e293b;
+        }
 
- .console-log a {
- color: #1e90ff;
- text-decoration: none;
- }
+        .console::-webkit-scrollbar {
+            width: 8px;
+            background-color: #1e293b;
+        }
 
- .console-log a:hover {
- text-decoration: underline;
- }
+        .console::-webkit-scrollbar-thumb {
+            background-color: #2563eb;
+            border-radius: 4px;
+        }
 
- .clear-logs-btn {
- background: none;
- border: none;
- color: #64748b;
- cursor: pointer;
- transition: color 0.3s ease;
- display: flex;
- align-items: center;
- }
+        .console-log {
+            white-space: nowrap;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
 
- .clear-logs-btn:hover {
- color: #f87171;
- }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
 
- .clear-logs-btn i {
- margin-left: 0.3rem;
- }
+        .console-log a {
+            color: #1e90ff;
+            text-decoration: none;
+        }
 
- .advanced-toggle {
- display: flex;
- align-items: center;
- margin-bottom: 1rem;
- }
+        .console-log a:hover {
+            text-decoration: underline;
+        }
 
- .toggle-switch {
- position: relative;
- display: inline-block;
- width: 40px;
- height: 20px;
- margin-right: 10px;
- }
+        .clear-logs-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
 
- .toggle-switch input {
- opacity: 0;
- width: 0;
- height: 0;
- }
+        .clear-logs-btn:hover {
+            color: #f87171;
+        }
 
- .slider {
- position: absolute;
- cursor: pointer;
- top: 0;
- left: 0;
- right: 0;
- bottom: 0;
- background-color: #cbd5e1;
- transition: .4s;
- border-radius: 34px;
- }
+        .clear-logs-btn i {
+            margin-left: 0.3rem;
+        }
 
- .slider:before {
- position: absolute;
- content: "";
- height: 16px;
- width: 16px;
- left: 2px;
- bottom: 2px;
- background-color: white;
- transition: .4s;
- border-radius: 50%;
- }
+        .advanced-toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
 
- input:checked + .slider {
- background-color: var(--primary-color);
- }
+        .advanced-toggle i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
 
- input:checked + .slider:before {
- transform: translateX(20px);
- }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+            margin-right: 10px;
+        }
 
- @media (max-width: 680px) {
- .container {
- margin: 1rem;
- padding: 1.5rem;
- }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
- .wallet-address {
- flex-wrap: wrap;
- }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 34px;
+        }
 
- .wallet-address span {
- white-space: normal;
- word-break: break-all;
- }
- }
- </style>
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        @media (max-width: 680px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .wallet-address {
+                flex-wrap: wrap;
+            }
+
+            .wallet-address span {
+                white-space: normal;
+                word-break: break-all;
+            }
+        }
+    </style>
 </head>
 <body>
- <div class="container">
- <div class="header">
- <i class="fas fa-exchange-alt header-icon"></i>
- <h1>USDC Bridge</h1>
- <p class="header-subtitle">Cross-Chain Bridging Solution</p>
- </div>
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-exchange-alt header-icon"></i>
+            <h1>USDC Bridge</h1>
+        </div>
 
- <div class="input-group">
- <label>Private Key</label>
- <div class="input-wrapper">
- <input type="password" id="privateKey" placeholder="Enter your private key securely">
- </div>
- <div id="walletAddress" class="wallet-address" style="display: none;">
- <span id="walletAddressText"></span>
- <button class="clear-wallet-btn" id="clearWalletButton">
- <i class="fas fa-trash"></i>
- </button>
- </div>
- </div>
+        <div class="input-group">
+            <label><i class="fas fa-key"></i> Private Key</label>
+            <div class="input-wrapper">
+                <input type="password" id="privateKey" placeholder="Enter your private key securely">
+            </div>
+            <div id="walletAddress" class="wallet-address" style="display: none;">
+                <span id="walletAddressText"></span>
+                <button class="clear-wallet-btn" id="clearWalletButton">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
 
- <div class="input-group">
- <label>Babylon Receiving Address</label>
- <div class="input-wrapper">
- <input type="text" id="babylonAddress" placeholder="bbn1gcytw83ag3vdqgnt6vskfvgtqet6u54wa5m3wm">
- </div>
- </div>
+        <div class="input-group">
+            <label><i class="fas fa-wallet"></i> Babylon Receiving Address</label>
+            <div class="input-wrapper">
+                <input type="text" id="babylonAddress" placeholder="bbn1gcytw83ag3vdqgnt6vskfvgtqet6u54wa5m3wm">
+            </div>
+        </div>
 
- <div class="input-group">
- <label>USDC Amount</label>
- <div class="input-wrapper">
- <input type="number" id="usdcAmount" placeholder="Enter USDC amount" step="0.001" min="0.001">
- </div>
- </div>
+        <div class="input-group">
+            <label><i class="fas fa-coins"></i> USDC Amount</label>
+            <div class="input-wrapper">
+                <input type="number" id="usdcAmount" placeholder="Enter USDC amount" step="0.001" min="0.001">
+            </div>
+        </div>
 
- <div class="input-group">
- <label>Transactions</label>
- <div class="input-wrapper">
- <input type="number" id="transactionCount" min="1" value="1">
- </div>
- </div>
+        <div class="input-group">
+            <label><i class="fas fa-exchange-alt"></i> Transactions</label>
+            <div class="input-wrapper">
+                <input type="number" id="transactionCount" min="1" value="1">
+            </div>
+        </div>
 
- <div class="advanced-toggle">
- <label class="toggle-switch">
- <input type="checkbox" id="advancedToggle">
- <span class="slider"></span>
- </label>
- Advanced Gas Options
- </div>
+        <div class="advanced-toggle">
+            <i class="fas fa-gas-pump"></i>
+            <label class="toggle-switch">
+                <input type="checkbox" id="advancedToggle">
+                <span class="slider"></span>
+            </label>
+            Advanced Gas Options
+        </div>
 
- <div id="advancedSection" style="display:none;">
- <div class="input-group">
- <label>Gas Boost (GWEI)</label>
- <div class="input-wrapper">
- <input type="number" id="gasBoost" placeholder="Current base fee + boost value">
- </div>
- </div>
- </div>
+        <div id="advancedSection" style="display:none;">
+            <div class="input-group">
+                <label><i class="fas fa-gas-pump"></i> Gas Boost (GWEI)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="gasBoost" placeholder="Boost to add to base fee (e.g., 2)" step="0.1" min="0">
+                </div>
+            </div>
+        </div>
 
- <button class="btn" id="executeButton">Bridge USDC</button>
+        <button class="btn" id="executeButton">Bridge USDC</button>
 
- <div class="console-container">
- <div class="console-header">
- <span>Console Output</span>
- <button class="clear-logs-btn" id="clearLogsButton">
- Clear <i class="fas fa-trash"></i>
- </button>
- </div>
- <div class="console" id="consoleOutput"></div>
- </div>
- </div>
+        <div class="console-container">
+            <div class="console-header">
+                <span>Console Output</span>
+                <button class="clear-logs-btn" id="clearLogsButton">
+                    Clear <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            <div class="console" id="consoleOutput"></div>
+        </div>
+    </div>
 
- <script>
- const contractAddress = '0x84F074C15513F15baeA0fbEd3ec42F0Bd1fb3efa';
- const baseToken = "0x1c7d4b196cb0c7b01d743fbc6116a902379c7238";
- const channelId = 10;
+    <script>
+        const contractAddress = '0x84F074C15513F15baeA0fbEd3ec42F0Bd1fb3efa';
+        const baseToken = "0x1c7d4b196cb0c7b01d743fbc6116a902379c7238";
+        const channelId = 10;
 
- const privateKeyInput = document.getElementById('privateKey');
- const walletAddressDisplay = document.getElementById('walletAddress');
- const walletAddressText = document.getElementById('walletAddressText');
- const clearWalletButton = document.getElementById('clearWalletButton');
- const babylonAddressInput = document.getElementById('babylonAddress');
- const usdcAmountInput = document.getElementById('usdcAmount');
- const transactionCountInput = document.getElementById('transactionCount');
- const advancedToggle = document.getElementById('advancedToggle');
- const advancedSection = document.getElementById('advancedSection');
- const executeButton = document.getElementById('executeButton');
- const gasBoostInput = document.getElementById('gasBoost');
- const consoleOutput = document.getElementById('consoleOutput');
- const clearLogsButton = document.getElementById('clearLogsButton');
+        const privateKeyInput = document.getElementById('privateKey');
+        const walletAddressDisplay = document.getElementById('walletAddress');
+        const walletAddressText = document.getElementById('walletAddressText');
+        const clearWalletButton = document.getElementById('clearWalletButton');
+        const babylonAddressInput = document.getElementById('babylonAddress');
+        const usdcAmountInput = document.getElementById('usdcAmount');
+        const transactionCountInput = document.getElementById('transactionCount');
+        const advancedToggle = document.getElementById('advancedToggle');
+        const advancedSection = document.getElementById('advancedSection');
+        const executeButton = document.getElementById('executeButton');
+        const gasBoostInput = document.getElementById('gasBoost');
+        const consoleOutput = document.getElementById('consoleOutput');
+        const clearLogsButton = document.getElementById('clearLogsButton');
 
- function createLogEntry(message, type = 'info', txHash = null) {
- const logEntry = document.createElement('div');
- logEntry.classList.add('console-log');
- 
- const timestamp = new Date().toLocaleTimeString();
- const typeColor = {
- 'info': '#4ade80',
- 'error': '#f87171',
- 'success': '#60a5fa'
- };
+        function createLogEntry(message, type = 'info', txHash = null) {
+            const logEntry = document.createElement('div');
+            logEntry.classList.add('console-log');
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const typeColor = {
+                'info': '#4ade80',
+                'error': '#f87171',
+                'success': '#60a5fa'
+            };
 
- let messageContent = message;
- if (txHash) {
- messageContent = `${message} <a href="https://app.union.build/explorer/transfers/${txHash}" target="_blank">${shortenHash(txHash)}</a>`;
- }
+            let messageContent = message;
+            if (txHash) {
+                let explorerUrl;
+                if (message.startsWith('Approval Tx Hash:')) {
+                    explorerUrl = `https://sepolia.etherscan.io/tx/${txHash}`;
+                } else {
+                    explorerUrl = `https://app.union.build/explorer/transfers/${txHash}`;
+                }
+                messageContent += ` <a href="${explorerUrl}" target="_blank">${shortenHash(txHash)}</a>`;
+            }
 
- logEntry.innerHTML = `
- <span style="color: #64748b; margin-right: 0.5rem;">[${timestamp}]</span>
- <span style="color: ${typeColor[type]}">${messageContent}</span>
- `;
+            logEntry.innerHTML = `
+                <span style="color: #64748b; margin-right: 0.5rem;">[${timestamp}]</span>
+                <span style="color: ${typeColor[type]}">${messageContent}</span>
+            `;
 
- consoleOutput.appendChild(logEntry);
- consoleOutput.scrollTop = consoleOutput.scrollHeight;
- }
+            consoleOutput.appendChild(logEntry);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
 
- function shortenHash(hash) {
- return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
- }
+        function shortenHash(hash) {
+            return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
+        }
 
- privateKeyInput.addEventListener('input', function() {
- try {
- const wallet = new ethers.Wallet(this.value);
- walletAddressText.textContent = `Wallet: ${wallet.address}`;
- walletAddressDisplay.style.display = 'flex';
- } catch (error) {
- walletAddressText.textContent = 'Invalid Private Key';
- walletAddressDisplay.style.display = 'flex';
- }
- });
+        privateKeyInput.addEventListener('input', function() {
+            try {
+                const wallet = new ethers.Wallet(this.value);
+                walletAddressText.textContent = `Wallet : ${wallet.address}`;
+                walletAddressDisplay.style.display = 'flex';
+            } catch (error) {
+                walletAddressText.textContent = 'Invalid Private Key';
+                walletAddressDisplay.style.display = 'flex';
+            }
+        });
 
- clearWalletButton.addEventListener('click', function() {
- privateKeyInput.value = '';
- walletAddressDisplay.style.display = 'none';
- });
+        clearWalletButton.addEventListener('click', function() {
+            privateKeyInput.value = '';
+            walletAddressDisplay.style.display = 'none';
+        });
 
- clearLogsButton.addEventListener('click', function() {
- while (consoleOutput.firstChild) {
- consoleOutput.removeChild(consoleOutput.firstChild);
- }
- });
+        clearLogsButton.addEventListener('click', function() {
+            while (consoleOutput.firstChild) {
+                consoleOutput.removeChild(consoleOutput.firstChild);
+            }
+        });
 
- advancedToggle.addEventListener('change', function() {
- advancedSection.style.display = this.checked ? 'block' : 'none';
- });
+        advancedToggle.addEventListener('change', function() {
+            advancedSection.style.display = this.checked ? 'block' : 'none';
+        });
 
- async function prepareBridge() {
- try {
- const privateKey = privateKeyInput.value;
- const babylonAddress = babylonAddressInput.value;
- const baseAmount = ethers.utils.parseUnits(usdcAmountInput.value, 6);
- const transactionCount = parseInt(transactionCountInput.value);
+        async function prepareBridge() {
+            executeButton.disabled = true;
+            executeButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            try {
+                const privateKey = privateKeyInput.value;
+                const babylonAddress = babylonAddressInput.value;
+                const baseAmount = ethers.utils.parseUnits(usdcAmountInput.value, 6);
+                const transactionCount = parseInt(transactionCountInput.value);
 
- const provider = new ethers.providers.JsonRpcProvider('https://sepolia.drpc.org');
- const wallet = new ethers.Wallet(privateKey, provider);
+                const provider = new ethers.providers.JsonRpcProvider('https://sepolia.drpc.org');
+                const wallet = new ethers.Wallet(privateKey, provider);
 
- createLogEntry('Initializing bridge transaction...', 'info');
+                createLogEntry('Initializing bridge transaction...', 'info');
 
- const abi = [
- "function transferAndCall(uint32 channelId, bytes memory receiver, address baseToken, uint256 baseAmount, bytes memory quoteToken, uint256 quoteAmount, bytes memory contractAddress, bytes memory contractCalldata, uint64 timeoutHeight, uint64 timeoutTimestamp, bytes32 salt) external"
- ];
- const contract = new ethers.Contract(contractAddress, abi, wallet);
+                const abi = [
+                    "function transferAndCall(uint32 channelId, bytes memory receiver, address baseToken, uint256 baseAmount, bytes memory quoteToken, uint256 quoteAmount, bytes memory contractAddress, bytes memory contractCalldata, uint64 timeoutHeight, uint64 timeoutTimestamp, bytes32 salt) external"
+                ];
+                const contract = new ethers.Contract(contractAddress, abi, wallet);
 
- const erc20Abi = [
- "function approve(address spender, uint256 amount) external returns (bool)",
- "function allowance(address owner, address spender) external view returns (uint256)"
- ];
- const tokenContract = new ethers.Contract(baseToken, erc20Abi, wallet);
+                const erc20Abi = [
+                    "function approve(address spender, uint256 amount) external returns (bool)",
+                    "function allowance(address owner, address spender) external view returns (uint256)"
+                ];
+                const tokenContract = new ethers.Contract(baseToken, erc20Abi, wallet);
 
- const currentNonce = await wallet.getTransactionCount();
+                const currentNonce = await wallet.getTransactionCount();
 
- for (let i = 0; i < transactionCount; i++) {
- const nonce = currentNonce + i;
- const receiver = ethers.utils.toUtf8Bytes(babylonAddress);
- const quoteToken = ethers.utils.toUtf8Bytes("bbn168fft4g777vnf9880plpehj2fzwjkeedc0c2s389eqa3cngh4s6scetjaz");
- const contractAddressParam = ethers.utils.toUtf8Bytes("bbn1248rv43kw0s60vkysgs2 uumrr8u7wmcaxf6fuswt3p806u32xrwqnq62t8");
+                for (let i = 0; i < transactionCount; i++) {
+                    const nonce = currentNonce + i;
+                    const receiver = ethers.utils.toUtf8Bytes(babylonAddress);
+                    const quoteToken = ethers.utils.toUtf8Bytes("bbn168fft4g777vnf9880plpehj2fzwjkeedc0c2s389eqa3cngh4s6scetjaz");
+                    const contractAddressParam = ethers.utils.toUtf8Bytes("bbn1248rv43kw0s60vkysgs2uumrr8u7wmcaxf6fuswt3p806u32xrwqnq62t8");
 
- createLogEntry(`Preparing Transaction ${i + 1}...`, 'info');
+                    createLogEntry(`Preparing Transaction ${i + 1}...`, 'info');
 
- const currentBaseFee = await provider.getGasPrice();
- const gasBoost = gasBoostInput.value ? 
- ethers.utils.parseUnits(gasBoostInput.value, 'gwei') : 
- ethers.utils.parseUnits('3', 'gwei');
- 
- const gasPrice = currentBaseFee.add(gasBoost);
+                    const currentBaseFee = await provider.getGasPrice();
+                    const gasBoostValue = gasBoostInput.value ? 
+                        ethers.utils.parseUnits(gasBoostInput.value.toString(), 'gwei') : 
+                        ethers.utils.parseUnits('0', 'gwei');
+                    
+                    const gasPrice = currentBaseFee.add(gasBoostValue);
+                    createLogEntry(`Using gas price: ${ethers.utils.formatUnits(gasPrice, 'gwei')} GWEI (Base: ${ethers.utils.formatUnits(currentBaseFee, 'gwei')} + Boost: ${ethers.utils.formatUnits(gasBoostValue, 'gwei')})`, 'info');
 
- const allowance = await tokenContract.allowance(wallet.address, contractAddress);
- if (allowance.lt(baseAmount)) {
- createLogEntry('Approving token transfer...', 'info');
- const approveTx = await tokenContract.approve(contractAddress, baseAmount, { nonce, gasPrice });
- await approveTx.wait();
- createLogEntry('Token approved successfully', 'success');
- }
+                    const allowance = await tokenContract.allowance(wallet.address, contractAddress);
+                    createLogEntry(`Current allowance: ${ethers.utils.formatUnits(allowance, 6)} USDC`, 'info');
+                    if (allowance.lt(baseAmount)) {
+                        createLogEntry(`Approving ${ethers.utils.formatUnits(baseAmount, 6)} USDC...`, 'info');
+                        const approveTx = await tokenContract.approve(contractAddress, baseAmount, { nonce, gasPrice });
+                        createLogEntry('Approval Tx Hash: ', 'info', approveTx.hash);
+                        await approveTx.wait();
+                        createLogEntry('Token approved successfully', 'success');
+                        const newAllowance = await tokenContract.allowance(wallet.address, contractAddress);
+                        createLogEntry(`New allowance: ${ethers.utils.formatUnits(newAllowance, 6)} USDC`, 'info');
+                    }
 
- const timeoutHeight = ethers.BigNumber.from("0xffffffffffffffff");
- const timeoutTimestamp = 0;
- const salt = ethers.utils.randomBytes(32);
+                    const timeoutHeight = ethers.BigNumber.from("0xffffffffffffffff");
+                    const timeoutTimestamp = 0;
+                    const salt = ethers.utils.randomBytes(32);
 
- createLogEntry('Executing bridge transfer...', 'info');
- const tx = await contract.transferAndCall(
- channelId,
- receiver,
- baseToken,
- baseAmount,
- quoteToken,
- baseAmount,
- contractAddressParam,
- "0x",
- timeoutHeight,
- timeoutTimestamp,
- salt,
- { gasPrice, nonce }
- );
+                    createLogEntry('Executing bridge transfer...', 'info');
+                    const tx = await contract.transferAndCall(
+                        channelId,
+                        receiver,
+                        baseToken,
+                        baseAmount,
+                        quoteToken,
+                        baseAmount,
+                        contractAddressParam,
+                        "0x",
+                        timeoutHeight,
+                        timeoutTimestamp,
+                        salt,
+                        { gasPrice, nonce }
+                    );
 
- createLogEntry('Tx Hash: ', 'success', tx.hash);
- const receipt = await tx.wait();
- createLogEntry('Transaction confirmed', 'success');
- }
+                    createLogEntry('Tx Hash: ', 'success', tx.hash);
+                    await tx.wait();
+                    createLogEntry('Transaction confirmed', 'success');
+                }
 
- createLogEntry('Bridge transfer completed successfully', 'success');
- } catch (error) {
- createLogEntry(`Error: ${error.message}`, 'error');
- }
- }
+                createLogEntry('Bridge transfer completed successfully', 'success');
+            } catch (error) {
+                createLogEntry(`Error: ${error.message}`, 'error');
+            } finally {
+                executeButton.disabled = false;
+                executeButton.innerHTML = 'Bridge USDC';
+            }
+        }
 
- executeButton.addEventListener('click', prepareBridge);
- </script>
+        executeButton.addEventListener('click', prepareBridge);
+    </script>
 </body>
 </html>
